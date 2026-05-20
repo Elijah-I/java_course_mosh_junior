@@ -12,7 +12,7 @@ public class Main {
 
         int principal = Main.getPrincipal(scanner);
         float monthRate = Main.getMonthRate(scanner);
-        int period = Main.getPeriod(scanner);
+        int period = Main.getMonthPeriod(scanner);
 
         String mortgage = Main.getMortgage(principal, period, monthRate);
 
@@ -31,36 +31,39 @@ public class Main {
         final int MAX_PRINCIPAL = 1_000_000;
 
         int principal = 0;
+        NumberFormat currency = NumberFormat.getCurrencyInstance();
 
         while (true) {
-            System.out.print("Principal ($1k - $1M): ");
+            System.out.print("Principal (" + currency.format(MIN_PRINCIPAL) + " - " + currency.format(MAX_PRINCIPAL) + "): ");
             principal = scanner.nextInt();
             if (principal >= MIN_PRINCIPAL && principal <= MAX_PRINCIPAL) {
                 break;
             }
-            System.out.println("Error: $1k - $1M");
+            System.out.println("Error: " + currency.format(MIN_PRINCIPAL) + " - " + currency.format(MAX_PRINCIPAL));
         }
 
         return principal;
     }
 
-    private static int getPeriod(Scanner scanner) {
+    private static int getMonthPeriod(Scanner scanner) {
         final byte MIN_PERIOD = 1;
         final byte MAX_PERIOD = 30;
 
         int period = 0;
+        int monthPeriod = 0;
 
         while (true) {
             System.out.print("Period (Years): ");
-            period = scanner.nextByte() * Main.MONTH_IN_YEAR;
+            period = scanner.nextByte();
 
             if (period >= MIN_PERIOD && period <= MAX_PERIOD) {
+                monthPeriod = period * Main.MONTH_IN_YEAR;
                 break;
             }
-            System.out.println("Error: 1 - 30");
+            System.out.println("Error: " + MIN_PERIOD + " - " + MAX_PERIOD);
         }
 
-        return period;
+        return monthPeriod;
     }
 
     private static float getMonthRate(Scanner scanner) {
@@ -78,7 +81,7 @@ public class Main {
                 monthRate = rate / Main.MONTH_IN_YEAR / PERCENT;
                 break;
             }
-            System.out.println("Error: 1 - 30");
+            System.out.println("Error: " + MIN_RATE + " - " + MAX_RATE);
         }
 
         return monthRate;

@@ -9,7 +9,20 @@ public class Main {
         byte years = (byte) getNumber("Period (Years): ", 1, 30);
         float rate = (float) getNumber("Annual interest rate: ", 1, 30);
 
-        System.out.println("Mortgage: " + calculateMortgage(principal, years, rate));
+        double mortgage = calculateMortgage(principal, years, rate);
+
+        printSchedule(mortgage, principal);
+    }
+
+    public static void printSchedule(double mortgage, double principal) {
+        NumberFormat number = NumberFormat.getCurrencyInstance();
+
+        System.out.println("MORTGAGE\n----------\nMonthly payments: " + number.format(mortgage) + "\n\nPAYMENT SCHEDULE\n----------");
+
+        while (principal > 0) {
+            principal -= mortgage;
+            System.out.println(number.format(Math.max(principal, 0)));
+        }
     }
 
     private static double getNumber(String message, double min, double max) {
@@ -28,7 +41,7 @@ public class Main {
         return number;
     }
 
-    private static String calculateMortgage(int principal, byte years, float rate) {
+    private static double calculateMortgage(int principal, byte years, float rate) {
         final byte MONTH_IN_YEAR = 12;
         final byte PERCENT = 100;
 
@@ -38,6 +51,6 @@ public class Main {
         double ratedPeriod = Math.pow(1 + monthRate, period);
         double total = (principal * (monthRate * ratedPeriod) / (ratedPeriod - 1));
 
-        return NumberFormat.getCurrencyInstance().format(total);
+        return total;
     }
 }
